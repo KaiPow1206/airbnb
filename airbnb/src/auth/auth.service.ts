@@ -24,10 +24,16 @@ export class AuthService {
          if (!checkUser){
             throw new BadRequestException("Email is wrong!!");
          }
-         const checkPass = await bcrypt.compare(pass_word, checkUser.pass_word);
-         if(!checkPass){
-            throw new BadRequestException("Password is wrong!!");
-         }
+         if (checkUser.pass_word.length === 60) {
+            const checkPass = await bcrypt.compare(pass_word, checkUser.pass_word);
+            if (!checkPass) {
+              throw new BadRequestException("Password is wrong!!");
+            }
+          } else {
+            if (checkUser.pass_word !== pass_word) {
+              throw new BadRequestException("Password is wrong!!");
+            }
+          }
 
          const token = this.jwtService.sign(
             {data:{userId:checkUser.id_nguoi_dung}},
