@@ -41,8 +41,8 @@ export class BinhLuanController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: "Internal Server"
   })
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post("/binh-luan")
   async create(
     @Body() createBinhLuanDto: CreateBinhLuanDto,
@@ -64,6 +64,8 @@ export class BinhLuanController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: "Internal Server"
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Put('/binh-luan/:MaBinhLuan')
   async update(
     @Param('MaBinhLuan') maBinhLuan: string, @Body() updateBinhLuanDto: UpdateBinhLuanDto,
@@ -85,6 +87,8 @@ export class BinhLuanController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: "Internal Server"
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/binh-luan/:MaBinhLuan')
   async remove(
     @Param('MaBinhLuan') maBinhLuan: string,
