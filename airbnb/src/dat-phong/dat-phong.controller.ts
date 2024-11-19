@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { DatPhongService } from './dat-phong.service';
 import { CreateDatPhongDto } from './dto/create-dat-phong.dto';
 import { UpdateDatPhongDto } from './dto/update-dat-phong.dto';
@@ -7,14 +7,16 @@ import { UpdateDatPhongDto } from './dto/update-dat-phong.dto';
 export class DatPhongController {
   constructor(private readonly datPhongService: DatPhongService) {}
 
+  @Get("/all-dat-phong")
+  findAll(
+    
+  ) {
+    return this.datPhongService.findAll();
+  }
+
   @Post()
   create(@Body() createDatPhongDto: CreateDatPhongDto) {
     return this.datPhongService.create(createDatPhongDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.datPhongService.findAll();
   }
 
   @Get(':id')
@@ -22,7 +24,7 @@ export class DatPhongController {
     return this.datPhongService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateDatPhongDto: UpdateDatPhongDto) {
     return this.datPhongService.update(+id, updateDatPhongDto);
   }

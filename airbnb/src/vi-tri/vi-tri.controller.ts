@@ -64,8 +64,8 @@ export class ViTriController {
     description: "Internal Server"
   })
   @Get("/vi-tri/phan-trang-tim-kiem")
-  @ApiQuery({name: "page", required: false, type:Number})
-  @ApiQuery({name: "size", required: false, type:Number})
+  @ApiQuery({name: "page", required: true, type:Number})
+  @ApiQuery({name: "size", required: true, type:Number})
   @ApiQuery({name: "keyword", required: false, type:String})
   async phanTrang(
     @Query('page') page: string,
