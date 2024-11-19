@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Res, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Res, UseGuards, Query, Put } from '@nestjs/common';
 import { ViTriService } from './vi-tri.service';
 import { CreateViTriDto } from './dto/create-vi-tri.dto';
 import { UpdateViTriDto } from './dto/update-vi-tri.dto';
@@ -88,11 +88,19 @@ export class ViTriController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.viTriService.findOne(+id);
+  async findOne(
+    @Param('id') id: string,
+    @Res() res: Response
+  ) {
+    try {
+      let findViTri = await this.viTriService.findOne(+id);
+      return res.status(HttpStatus.OK).json(findViTri);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateViTriDto: UpdateViTriDto) {
     return this.viTriService.update(+id, updateViTriDto);
   }

@@ -46,8 +46,23 @@ export class ViTriService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} viTri`;
+  async findOne(id: number) {
+    try {
+      let findViTri = await this.prisma.viTri.findMany({
+        where:{
+          id_vi_tri:Number(id)
+        },
+        include:{
+          Phong: true,
+        }
+      })
+      if (findViTri.length == 0) {
+        throw new Error(`Không có bình luận nào cho mã phòng ${id}`);
+      }
+      return findViTri;
+     } catch (error) {
+      throw new Error(error);
+     }
   }
 
   update(id: number, updateViTriDto: UpdateViTriDto) {
