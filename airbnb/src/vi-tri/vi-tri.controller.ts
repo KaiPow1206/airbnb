@@ -87,13 +87,21 @@ export class ViTriController {
     }
   }
 
-  @Get(':id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Get list ViTri by id Successful"
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: "Internal Server"
+  })
+  @Get('/vi-tri/:MaViTri')
   async findOne(
-    @Param('id') id: string,
+    @Param('MaViTri') maViTri: string,
     @Res() res: Response
   ) {
     try {
-      let findViTri = await this.viTriService.findOne(+id);
+      let findViTri = await this.viTriService.findOne(+maViTri);
       return res.status(HttpStatus.OK).json(findViTri);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
