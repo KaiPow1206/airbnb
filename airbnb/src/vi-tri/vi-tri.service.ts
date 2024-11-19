@@ -65,11 +65,47 @@ export class ViTriService {
      }
   }
 
-  update(id: number, updateViTriDto: UpdateViTriDto) {
-    return `This action updates a #${id} viTri`;
+  async update(maViTri: number, updateViTriDto: UpdateViTriDto) {
+    try {
+      let checkViTri = await this.prisma.viTri.findFirst({
+        where: {
+          id_vi_tri: Number(maViTri)
+        }
+      })
+      if (!checkViTri) {
+        throw new Error(`Không có mã vị trí nào tương ứng với ${maViTri}`)
+      }
+      let updatedViTri = await this.prisma.viTri.update({
+        where: { id_vi_tri: maViTri },
+        data: updateViTriDto,
+      });
+      return updatedViTri;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} viTri`;
+  async remove(maViTri: number) {
+    try {
+      let checkViTri = await this.prisma.viTri.findFirst({
+        where: {
+          id_vi_tri: Number(maViTri)
+        }
+      })
+      if (!checkViTri) {
+        throw new Error(`Không có mã vị trí tương ứng với ${maViTri}`)
+      }
+      let deleteViTri = await this.prisma.viTri.delete({
+        where: {
+          id_vi_tri: Number(maViTri)
+        },
+      })
+      return {
+        message: ` Đã xóa mã đặt phòng là ${maViTri} thành công.`,
+        data: deleteViTri,
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
