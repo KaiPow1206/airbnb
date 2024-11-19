@@ -1,26 +1,131 @@
 import { Injectable } from '@nestjs/common';
 import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
-
+import { PrismaClient } from '@prisma/client';
+import { nguoiDungDto } from './dto/nguoi-dung.dto';
+import { plainToClass } from 'class-transformer';
 @Injectable()
 export class NguoiDungService {
-  create(createNguoiDungDto: CreateNguoiDungDto) {
-    return 'This action adds a new nguoiDung';
+  prisma = new PrismaClient();
+  async create(createNguoiDungDto: CreateNguoiDungDto): Promise<nguoiDungDto> {
+    try {
+      let newUser = await this.prisma.nguoiDung.create({
+        data: createNguoiDungDto
+      })
+      return plainToClass(nguoiDungDto, newUser)
+    } catch (error) {
+      throw new Error (error)
+    }
   }
 
-  findAll() {
-    return `This action returns all nguoiDung`;
+  async findAll(): Promise<nguoiDungDto[]> {
+    try {
+      const user = await this.prisma.nguoiDung.findMany();
+      return user.map(nguoiDung => plainToClass(nguoiDungDto, nguoiDung));
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  async findAllPage(page: number,size: number,keyword:string):Promise<nguoiDungDto[]> {
+    try {
+      let users = await this.prisma.nguoiDung.findMany({
+        where:keyword ? {
+          name:{
+            contains: keyword
+          }
+        }
+        : {},
+        skip: (page - 1) * size,
+        take: size
+      });
+      return users.map(nguoiDung =>plainToClass(nguoiDungDto,nguoiDung));
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+  
+  async findOne(id: number): Promise<nguoiDungDto | null> {
+    try {
+      const user = await this.prisma.nguoiDung.findUnique({
+        where: { id_nguoi_dung:id },
+      });
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      return plainToClass(nguoiDungDto, user);
+    } catch (error) {
+      if (error.message === 'User not found') {
+        throw new Error('User not found');
+      }
+      throw new Error(
+        `Error while retrieving user with ID ${id}: ${error.message}`,
+      );
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} nguoiDung`;
+  async update(id: number, updateNguoiDungDto: UpdateNguoiDungDto) {
+    try {
+      const user = await this.prisma.nguoiDung.findUnique({
+        where: { id_nguoi_dung: id },
+      });
+  
+      if (!user) {
+        throw new Error('User not found');
+      }
+  
+      const updatedUser = await this.prisma.nguoiDung.update({
+        where: { id_nguoi_dung: id },
+        data: updateNguoiDungDto,
+      });
+  
+      return {
+        message: `User with ID ${id} has been successfully updated.`,
+        updatedUser,
+      };
+    } catch (error) {
+      if (error.message === 'User not found') {
+        throw new Error('User not found');
+      }
+      throw new Error(
+        `Error while updating user with ID ${id}: ${error.message}`
+      );
+    }
   }
+  
 
-  update(id: number, updateNguoiDungDto: UpdateNguoiDungDto) {
-    return `This action updates a #${id} nguoiDung`;
+  async remove(id: number): Promise<nguoiDungDto | null> {
+    try {
+      const user = await this.prisma.nguoiDung.findUnique({
+        where: { id_nguoi_dung: id }
+      });
+  
+      if (!user) {
+        throw new Error('User not found');
+      }
+  
+      const deletedUser = await this.prisma.nguoiDung.delete({
+        where: { id_nguoi_dung: id }
+      });
+  
+      return deletedUser;
+    } catch (error) {
+      if (error.message === 'User not found') {
+        throw new Error('User not found');
+      }
+      
+      throw new Error('An unexpected error occurred while deleting the user');
+    }
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} nguoiDung`;
+  async searchUser(tenNguoiDung: string) {
+    return this.prisma.nguoiDung.findMany({
+      where: {
+        name: {
+          contains: tenNguoiDung, // Tìm kiếm theo tên
+        },
+      },
+    });
   }
+  
 }
