@@ -6,7 +6,7 @@ import { ApiBearerAuth, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestj
 import { ViTriDto } from './dto/vi-tri.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-@ApiTags('Vi Tri')
+@ApiTags('Vị Trí')
 @Controller('vi-tri')
 export class ViTriController {
   constructor(private readonly viTriService: ViTriService) { }

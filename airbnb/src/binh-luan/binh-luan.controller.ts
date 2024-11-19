@@ -8,7 +8,7 @@ import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
 
-@ApiTags('Binh Luan')
+@ApiTags('Bình Luận')
 @Controller('binh-luan')
 export class BinhLuanController {
   constructor(private readonly binhLuanService: BinhLuanService) { }

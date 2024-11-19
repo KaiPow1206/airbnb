@@ -7,7 +7,7 @@ import { Response } from 'express';
 import { DatPhongDto } from './dto/dat-phong.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@ApiTags('Dat Phong')
+@ApiTags('Đặt Phòng')
 @Controller('dat-phong')
 export class DatPhongController {
   constructor(private readonly datPhongService: DatPhongService) {}
