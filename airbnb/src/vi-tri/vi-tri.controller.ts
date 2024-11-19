@@ -64,8 +64,8 @@ export class ViTriController {
     description: "Internal Server"
   })
   @Get("/vi-tri/phan-trang-tim-kiem")
-  @ApiQuery({name: "page", required: false, type:Number})
-  @ApiQuery({name: "size", required: false, type:Number})
+  @ApiQuery({name: "page", required: true, type:Number})
+  @ApiQuery({name: "size", required: true, type:Number})
   @ApiQuery({name: "keyword", required: false, type:String})
   async phanTrang(
     @Query('page') page: string,
@@ -87,13 +87,21 @@ export class ViTriController {
     }
   }
 
-  @Get(':id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Get list ViTri by id Successful"
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: "Internal Server"
+  })
+  @Get('/vi-tri/:MaViTri')
   async findOne(
-    @Param('id') id: string,
+    @Param('MaViTri') maViTri: string,
     @Res() res: Response
   ) {
     try {
-      let findViTri = await this.viTriService.findOne(+id);
+      let findViTri = await this.viTriService.findOne(+maViTri);
       return res.status(HttpStatus.OK).json(findViTri);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
