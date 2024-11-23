@@ -14,7 +14,7 @@ model BinhLuan {
   ngay_binh_luan     DateTime?  @db.DateTime(0)
   noi_dung           String?    @db.VarChar(255)
   sao_binh_luan      Int?
-  Phong              Phong?     @relation(fields: [id_phong], references: [id_phong], onDelete: NoAction, onUpdate: NoAction, map: "BinhLuan_ibfk_1")
+  Phong              Phong?     @relation(fields: [id_phong], references: [id_phong], onDelete: Cascade, onUpdate: NoAction, map: "BinhLuan_ibfk_1")
   NguoiDung          NguoiDung? @relation(fields: [id_nguoi_binh_luan], references: [id_nguoi_dung], onDelete: Cascade, onUpdate: NoAction, map: "BinhLuan_ibfk_2")
 
   @@index([id_nguoi_binh_luan], map: "id_nguoi_binh_luan")
@@ -28,7 +28,7 @@ model DatPhong {
   ngay_den       DateTime?  @db.DateTime(0)
   ngay_di        DateTime?  @db.DateTime(0)
   so_luong_khach Int?
-  Phong          Phong?     @relation(fields: [id_phong], references: [id_phong], onDelete: NoAction, onUpdate: NoAction, map: "DatPhong_ibfk_1")
+  Phong          Phong?     @relation(fields: [id_phong], references: [id_phong], onDelete: Cascade, onUpdate: NoAction, map: "DatPhong_ibfk_1")
   NguoiDung      NguoiDung? @relation(fields: [id_nguoi_dat], references: [id_nguoi_dung], onDelete: Cascade, onUpdate: NoAction, map: "DatPhong_ibfk_2")
 
   @@index([id_nguoi_dat], map: "id_nguoi_dat")
@@ -70,7 +70,7 @@ model Phong {
   id_vi_tri Int?
   BinhLuan  BinhLuan[]
   DatPhong  DatPhong[]
-  ViTri     ViTri?     @relation(fields: [id_vi_tri], references: [id_vi_tri], onDelete: NoAction, onUpdate: NoAction, map: "Phong_ibfk_1")
+  ViTri     ViTri?     @relation(fields: [id_vi_tri], references: [id_vi_tri], onDelete: Cascade, onUpdate: NoAction, map: "Phong_ibfk_1")
 
   @@index([id_vi_tri], map: "id_vi_tri")
 }
