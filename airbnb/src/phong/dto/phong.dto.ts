@@ -54,6 +54,9 @@ export class phongDto {
   @Expose()
   id_vi_tri: number;
 
+  @Expose()
+  id_nguoi_dung: number;
+
   constructor(partial: Partial<phongDto>) {
     Object.assign(this, partial);
   }

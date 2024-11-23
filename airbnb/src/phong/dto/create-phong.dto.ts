@@ -74,7 +74,9 @@ export class CreatePhongDto {
     @ApiProperty()
     id_vi_tri:number;
 
-  
+    @IsNotEmpty({message: "Người dùng không được để trống"})
+    @ApiProperty()
+    id_nguoi_dung:number;
 }
 export class FileUploadDto{
     @ApiProperty({type: 'string',format: 'binary'})

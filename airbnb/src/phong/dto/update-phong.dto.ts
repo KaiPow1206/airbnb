@@ -94,4 +94,9 @@ export class UpdatePhongDto extends PartialType(CreatePhongDto) {
     @ApiProperty()
     @IsOptional()
     id_vi_tri:number;
+
+    @IsNotEmpty({message: "Người dùng không được để trống"})
+    @ApiProperty()
+    @IsOptional()
+    id_nguoi_dung:number;
 }

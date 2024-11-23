@@ -146,8 +146,8 @@ export class ViTriController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: "Internal Server"
   })
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/vi-tri/:MaVitri')
   async remove(
     @Param('MaVitri') maViTri: string,
