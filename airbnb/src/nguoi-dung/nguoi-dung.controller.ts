@@ -13,7 +13,7 @@ import { CloudUploadService } from 'src/shared/cloudUpload.service';
 export class NguoiDungController {
   constructor(
     private readonly nguoiDungService: NguoiDungService,
-    private readonly cloudUploadService: CloudUploadService
+    private readonly cloudUpLoadService: CloudUploadService
 
   ) {}
 
@@ -32,18 +32,22 @@ export class NguoiDungController {
     }
   }
 
+  @ApiResponse({status: HttpStatus.OK, description: "Get list users successfully"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Get("/get-users")
   async findAll(
     @Res() res:Response
   ): Promise<Response <nguoiDungDto[]>> {
     try {
-      const user: nguoiDungDto[] = await this.nguoiDungService.findAll();
+      const user = await this.nguoiDungService.findAll();
       return res.status(HttpStatus.OK).json(user);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message: error.message});
     }
   }
-  
+
+  @ApiResponse({status: HttpStatus.OK, description: "Get list users by page successfully"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Get("/users/phan-trang-tim-kiem")
   @ApiQuery({name: "page", required: false, type:Number})
   @ApiQuery({name: "size", required: false, type:Number})
@@ -68,6 +72,10 @@ export class NguoiDungController {
     }
    
   }
+  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: "Input wrong format"})
+  @ApiResponse({status: HttpStatus.OK, description: "Get users by successfully"})
+  @ApiResponse({status: HttpStatus.NOT_FOUND, description: "User not found"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
 
   @Get('users/:id')
   async findOne(
@@ -78,7 +86,7 @@ export class NguoiDungController {
       return res.status(HttpStatus.BAD_REQUEST).json({ message: "Invalid user ID" });
     }
     try {
-      const user: nguoiDungDto = await this.nguoiDungService.findOne(+id);
+      const user = await this.nguoiDungService.findOne(+id);
       if (!user) {
         return res.status(HttpStatus.NOT_FOUND).json({ message: "User not found" });
       }
@@ -91,6 +99,10 @@ export class NguoiDungController {
     }
   }
 
+  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: "Input wrong format"})
+  @ApiResponse({status: HttpStatus.OK, description: "User updated successfully"})
+  @ApiResponse({status: HttpStatus.NOT_FOUND, description: "User not found"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Put('users/:id')
   async update(
     @Param('id') id: string,
@@ -117,6 +129,10 @@ export class NguoiDungController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message:error.message});
     }
   }
+  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: "Input wrong format"})
+  @ApiResponse({status: HttpStatus.OK, description: "User deleted successfully"})
+  @ApiResponse({status: HttpStatus.NOT_FOUND, description: "User not found"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
 
   @Delete('/delete-user/:id')
   async remove(
@@ -145,6 +161,9 @@ export class NguoiDungController {
     }
   }
   
+  @ApiResponse({status: HttpStatus.OK, description: "Find user successfully"})
+  @ApiResponse({status: HttpStatus.NOT_FOUND, description: "User not found"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Get('users/search/:TenNguoiDung')
   async searchuUser(
     @Param('TenNguoiDung') tenNguoiDung: string,
@@ -163,23 +182,26 @@ export class NguoiDungController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message:error.message});
     }
   }
+
+  @ApiResponse({status: HttpStatus.OK, description: "Upload avatar successfully"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Post("users/upload-avatar")
-  @ApiConsumes("multipart/form-data")
-  @ApiBody({
+    @ApiConsumes("multipart/form-data")
+    @ApiBody({
     type: FileUploadDto,
     required: true
   })
   @UseInterceptors(FileInterceptor('hinhAnh'))
-  async uploadThumbnailCloud(
+  async uploadAvatarUser(
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response
   ){
     try {
-      const result = await this.cloudUploadService.uploadImage(file, 'nguoidung')
-      return res.status(200).json(result);
+      const result = await this.cloudUpLoadService.upLoadImage(file,'nguoidung')
+      return res.status(HttpStatus.OK).json(result);
     } catch (error) {
       console.log(error);
-      return res.status(500).json({message:"Upload failed"});
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message:"Upload failed"});
     }
   }
 }

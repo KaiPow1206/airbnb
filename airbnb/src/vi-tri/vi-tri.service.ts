@@ -65,8 +65,24 @@ export class ViTriService {
      }
   }
 
-  update(id: number, updateViTriDto: UpdateViTriDto) {
-    return `This action updates a #${id} viTri`;
+  async update(id: number, UpdateViTriDto: UpdateViTriDto) {
+    try {
+      const user = await this.prisma.viTri.findUnique({
+        where: { id_vi_tri: id },
+      });
+  
+      const updatedLoc = await this.prisma.viTri.update({
+        where: { id_vi_tri: id },
+        data: UpdateViTriDto,
+      });
+  
+      return {
+        message: "Location updated successfully",
+        updatedLoc,
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   remove(id: number) {

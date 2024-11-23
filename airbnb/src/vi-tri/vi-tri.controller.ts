@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Res, UseGuards, Query, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, Res, UseGuards, Query, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ViTriService } from './vi-tri.service';
 import { CreateViTriDto } from './dto/create-vi-tri.dto';
 import { UpdateViTriDto } from './dto/update-vi-tri.dto';
-import { ApiBearerAuth, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ViTriDto } from './dto/vi-tri.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('Vi Tri')
 @Controller('vi-tri')
 export class ViTriController {
@@ -100,13 +101,28 @@ export class ViTriController {
     }
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateViTriDto: UpdateViTriDto) {
-    return this.viTriService.update(+id, updateViTriDto);
+  @Put('users/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() UpdateViTriDto: UpdateViTriDto,
+    @Res() res:Response
+  ) {
+    try {
+      const locId= Number(id);
+      const updatedLoc = await this.viTriService.update(locId,UpdateViTriDto)
+      return res.status(HttpStatus.OK).json({
+        message: "Location updated successfully",
+        data: updatedLoc
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message:error.message});
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.viTriService.remove(+id);
   }
+
+  
 }
