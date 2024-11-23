@@ -5,8 +5,8 @@ import { SharedModule } from 'src/shared/sharedModule';
 import { JwtStrategy } from 'src/strategy/jwt.strategy';
 
 @Module({
+  imports:[SharedModule],
   controllers: [NguoiDungController],
   providers: [NguoiDungService,JwtStrategy],
-  imports: [SharedModule]
 })
 export class NguoiDungModule {}

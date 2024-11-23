@@ -23,7 +23,7 @@ export class NguoiDungService {
       const user = await this.prisma.nguoiDung.findMany();
       return user.map(nguoiDung => plainToClass(nguoiDungDto, nguoiDung));
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error);
     }
   }
   async findAllPage(page: number,size: number,keyword:string):Promise<nguoiDungDto[]> {
@@ -44,9 +44,9 @@ export class NguoiDungService {
     }
   }
   
-  async findOne(id: number): Promise<nguoiDungDto | null> {
+  async findOne(id: number): Promise<nguoiDungDto> {
     try {
-      const user = await this.prisma.nguoiDung.findUnique({
+      const user = await this.prisma.nguoiDung.findFirst({
         where: { id_nguoi_dung:id },
       });
 
@@ -67,7 +67,7 @@ export class NguoiDungService {
 
   async update(id: number, updateNguoiDungDto: UpdateNguoiDungDto) {
     try {
-      const user = await this.prisma.nguoiDung.findUnique({
+      const user = await this.prisma.nguoiDung.findFirst({
         where: { id_nguoi_dung: id },
       });
   
@@ -97,7 +97,7 @@ export class NguoiDungService {
 
   async remove(id: number): Promise<nguoiDungDto | null> {
     try {
-      const user = await this.prisma.nguoiDung.findUnique({
+      const user = await this.prisma.nguoiDung.findFirst({
         where: { id_nguoi_dung: id }
       });
   

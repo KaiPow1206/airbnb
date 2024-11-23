@@ -65,6 +65,23 @@ export class ViTriService {
      }
   }
 
+<<<<<<< HEAD
+  async update(id: number, UpdateViTriDto: UpdateViTriDto) {
+    try {
+      const user = await this.prisma.viTri.findUnique({
+        where: { id_vi_tri: id },
+      });
+  
+      const updatedLoc = await this.prisma.viTri.update({
+        where: { id_vi_tri: id },
+        data: UpdateViTriDto,
+      });
+  
+      return {
+        message: "Location updated successfully",
+        updatedLoc,
+      };
+=======
   async update(maViTri: number, updateViTriDto: UpdateViTriDto) {
     try {
       let checkViTri = await this.prisma.viTri.findFirst({
@@ -80,6 +97,7 @@ export class ViTriService {
         data: updateViTriDto,
       });
       return updatedViTri;
+>>>>>>> 3e656f5c90080feec1e2bb1f7e16a79e76cb3af2
     } catch (error) {
       throw new Error(error);
     }
