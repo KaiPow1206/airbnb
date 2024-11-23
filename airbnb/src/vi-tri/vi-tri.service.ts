@@ -46,18 +46,18 @@ export class ViTriService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(maViTri: number) {
     try {
       let findViTri = await this.prisma.viTri.findMany({
         where:{
-          id_vi_tri:Number(id)
+          id_vi_tri:Number(maViTri)
         },
         include:{
           Phong: true,
         }
       })
       if (findViTri.length == 0) {
-        throw new Error(`Không có bình luận nào cho mã phòng ${id}`);
+        throw new Error(`Không có mã vị trí nào tương ứng với ${maViTri}`);
       }
       return findViTri;
      } catch (error) {
@@ -65,6 +65,7 @@ export class ViTriService {
      }
   }
 
+<<<<<<< HEAD
   async update(id: number, UpdateViTriDto: UpdateViTriDto) {
     try {
       const user = await this.prisma.viTri.findUnique({
@@ -80,12 +81,49 @@ export class ViTriService {
         message: "Location updated successfully",
         updatedLoc,
       };
+=======
+  async update(maViTri: number, updateViTriDto: UpdateViTriDto) {
+    try {
+      let checkViTri = await this.prisma.viTri.findFirst({
+        where: {
+          id_vi_tri: Number(maViTri)
+        }
+      })
+      if (!checkViTri) {
+        throw new Error(`Không có mã vị trí nào tương ứng với ${maViTri}`)
+      }
+      let updatedViTri = await this.prisma.viTri.update({
+        where: { id_vi_tri: maViTri },
+        data: updateViTriDto,
+      });
+      return updatedViTri;
+>>>>>>> 3e656f5c90080feec1e2bb1f7e16a79e76cb3af2
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} viTri`;
+  async remove(maViTri: number) {
+    try {
+      let checkViTri = await this.prisma.viTri.findFirst({
+        where: {
+          id_vi_tri: Number(maViTri)
+        }
+      })
+      if (!checkViTri) {
+        throw new Error(`Không có mã vị trí tương ứng với ${maViTri}`)
+      }
+      let deleteViTri = await this.prisma.viTri.delete({
+        where: {
+          id_vi_tri: Number(maViTri)
+        },
+      })
+      return {
+        message: ` Đã xóa mã đặt phòng là ${maViTri} thành công.`,
+        data: deleteViTri,
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

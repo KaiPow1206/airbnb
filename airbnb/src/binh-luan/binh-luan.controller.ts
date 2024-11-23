@@ -8,7 +8,7 @@ import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
 
-@ApiTags('Binh Luan')
+@ApiTags('Bình Luận')
 @Controller('binh-luan')
 export class BinhLuanController {
   constructor(private readonly binhLuanService: BinhLuanService) { }
@@ -68,7 +68,8 @@ export class BinhLuanController {
   @UseGuards(AuthGuard('jwt'))
   @Put('/binh-luan/:MaBinhLuan')
   async update(
-    @Param('MaBinhLuan') maBinhLuan: string, @Body() updateBinhLuanDto: UpdateBinhLuanDto,
+    @Param('MaBinhLuan') maBinhLuan: string, 
+    @Body() updateBinhLuanDto: UpdateBinhLuanDto,
     @Res() res: Response
   ) {
     try {

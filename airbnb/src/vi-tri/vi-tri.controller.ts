@@ -6,8 +6,12 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiResponse, 
 import { ViTriDto } from './dto/vi-tri.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+<<<<<<< HEAD
 import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('Vi Tri')
+=======
+@ApiTags('Vị Trí')
+>>>>>>> 3e656f5c90080feec1e2bb1f7e16a79e76cb3af2
 @Controller('vi-tri')
 export class ViTriController {
   constructor(private readonly viTriService: ViTriService) { }
@@ -65,8 +69,8 @@ export class ViTriController {
     description: "Internal Server"
   })
   @Get("/vi-tri/phan-trang-tim-kiem")
-  @ApiQuery({name: "page", required: false, type:Number})
-  @ApiQuery({name: "size", required: false, type:Number})
+  @ApiQuery({name: "page", required: true, type:Number})
+  @ApiQuery({name: "size", required: true, type:Number})
   @ApiQuery({name: "keyword", required: false, type:String})
   async phanTrang(
     @Query('page') page: string,
@@ -88,19 +92,28 @@ export class ViTriController {
     }
   }
 
-  @Get(':id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Get list ViTri by id Successful"
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: "Internal Server"
+  })
+  @Get('/vi-tri/:MaViTri')
   async findOne(
-    @Param('id') id: string,
+    @Param('MaViTri') maViTri: string,
     @Res() res: Response
   ) {
     try {
-      let findViTri = await this.viTriService.findOne(+id);
+      let findViTri = await this.viTriService.findOne(+maViTri);
       return res.status(HttpStatus.OK).json(findViTri);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
   }
 
+<<<<<<< HEAD
   @Put('users/:id')
   async update(
     @Param('id') id: string,
@@ -116,12 +129,53 @@ export class ViTriController {
       });
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message:error.message});
+=======
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Update DatPhong Successful"
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: "Internal Server"
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/vi-tri/:MaVitri')
+  async update(
+    @Param('MaVitri') maViTri: string,
+    @Body() updateViTriDto: UpdateViTriDto,
+    @Res() res: Response
+  ) {
+    try {
+      let updateViTri = await this.viTriService.update(+maViTri, updateViTriDto);
+      return res.status(HttpStatus.OK).json(updateViTri);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+>>>>>>> 3e656f5c90080feec1e2bb1f7e16a79e76cb3af2
     }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.viTriService.remove(+id);
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Delete ViTri Successful"
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: "Internal Server"
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/vi-tri/:MaVitri')
+  async remove(
+    @Param('MaVitri') maViTri: string,
+    @Res() res : Response
+  ) {
+    try {
+      let removeViTri = await this.viTriService.remove(+maViTri);
+      return res.status(HttpStatus.OK).json(removeViTri);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
   }
 
   

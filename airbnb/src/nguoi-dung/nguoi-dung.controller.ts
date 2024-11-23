@@ -8,7 +8,7 @@ import { nguoiDungDto } from './dto/nguoi-dung.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudUploadService } from 'src/shared/cloudUpload.service';
 
-@ApiTags('Nguoi dung')
+@ApiTags('Người Dùng')
 @Controller('nguoi-dung')
 export class NguoiDungController {
   constructor(
