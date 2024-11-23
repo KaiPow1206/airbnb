@@ -6,12 +6,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiResponse, 
 import { ViTriDto } from './dto/vi-tri.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-<<<<<<< HEAD
-import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('Vi Tri')
-=======
-@ApiTags('Vị Trí')
->>>>>>> 3e656f5c90080feec1e2bb1f7e16a79e76cb3af2
 @Controller('vi-tri')
 export class ViTriController {
   constructor(private readonly viTriService: ViTriService) { }
@@ -113,23 +108,6 @@ export class ViTriController {
     }
   }
 
-<<<<<<< HEAD
-  @Put('users/:id')
-  async update(
-    @Param('id') id: string,
-    @Body() UpdateViTriDto: UpdateViTriDto,
-    @Res() res:Response
-  ) {
-    try {
-      const locId= Number(id);
-      const updatedLoc = await this.viTriService.update(locId,UpdateViTriDto)
-      return res.status(HttpStatus.OK).json({
-        message: "Location updated successfully",
-        data: updatedLoc
-      });
-    } catch (error) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({message:error.message});
-=======
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Update DatPhong Successful"
@@ -151,7 +129,6 @@ export class ViTriController {
       return res.status(HttpStatus.OK).json(updateViTri);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
->>>>>>> 3e656f5c90080feec1e2bb1f7e16a79e76cb3af2
     }
   }
 

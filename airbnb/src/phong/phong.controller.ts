@@ -2,17 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Que
 import { PhongService } from './phong.service';
 import { CreatePhongDto, FileUploadDto } from './dto/create-phong.dto';
 import { UpdatePhongDto } from './dto/update-phong.dto';
-<<<<<<< HEAD
 import { Response } from 'express';
 import { phongDto } from './dto/phong.dto';
 import { ApiBody, ApiConsumes, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudUploadService } from 'src/shared/cloudUpload.service';
 
-=======
 import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Phòng')
->>>>>>> 3e656f5c90080feec1e2bb1f7e16a79e76cb3af2
 @Controller('phong')
 export class PhongController {
   constructor(
