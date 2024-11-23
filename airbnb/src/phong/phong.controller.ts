@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Query, Req, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Query, Req, Put, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { PhongService } from './phong.service';
 import { CreatePhongDto, FileUploadDto } from './dto/create-phong.dto';
 import { UpdatePhongDto } from './dto/update-phong.dto';
 import { Response } from 'express';
 import { phongDto } from './dto/phong.dto';
-import { ApiBody, ApiConsumes, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudUploadService } from 'src/shared/cloudUpload.service';
 
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags('Phòng')
 @Controller('phong')
 export class PhongController {
@@ -17,7 +18,10 @@ export class PhongController {
     private readonly cloudUploadService: CloudUploadService
 
   ) { }
-
+  @ApiResponse({status: HttpStatus.CREATED, description: "Create room successfully"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post("/create-room")
   async create(
     @Body() createPhongDto: CreatePhongDto,
@@ -31,6 +35,8 @@ export class PhongController {
     }
   }
 
+  @ApiResponse({status: HttpStatus.OK, description: "Get list room successfully"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Get("/get-list-room")
   async findAll(
     @Res() res: Response
@@ -43,6 +49,8 @@ export class PhongController {
     }
   }
 
+  @ApiResponse({status: HttpStatus.OK, description: "Get room by location successfully"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Get("get-room/lay-phong-theo-vi-tri/:MaViTri")
   async findOne(
     @Param('MaViTri') maViTri: string,
@@ -83,6 +91,10 @@ export class PhongController {
 
   }
 
+  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: "Input wrong format"})
+  @ApiResponse({status: HttpStatus.OK, description: "Get rooom by ID successfully"})
+  @ApiResponse({status: HttpStatus.NOT_FOUND, description: "Room not found"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
   @Get("get-room/:id")
   async findOneRoom(
     @Param('id') id: string,
@@ -105,6 +117,12 @@ export class PhongController {
     }
   }
 
+  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: "Input wrong format"})
+  @ApiResponse({status: HttpStatus.OK, description: "Room updated successfully"})
+  @ApiResponse({status: HttpStatus.NOT_FOUND, description: "Room not found"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Put('room/:id')
   async update(
     @Param('id') id: string,
@@ -132,6 +150,13 @@ export class PhongController {
     }
   }
 
+
+  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: "Input wrong format"})
+  @ApiResponse({status: HttpStatus.OK, description: "Room deleted successfully"})
+  @ApiResponse({status: HttpStatus.NOT_FOUND, description: "Room not found"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/delete-room/:id')
   async remove(
     @Param('id') id: string,
@@ -158,6 +183,11 @@ export class PhongController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
   }
+
+  @ApiResponse({status: HttpStatus.OK, description: "Upload image room successfully"})
+  @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post("/upload-img-room")
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -172,12 +202,6 @@ export class PhongController {
     @Res() res: Response
   ) {
     try {
-      if (!file) {
-        return res.status(HttpStatus.BAD_REQUEST).json({ message: "File không được để trống" });
-      }
-      if (!roomId) {
-        return res.status(HttpStatus.BAD_REQUEST).json({ message: "roomId không được để trống" });
-      }
       const result = await this.cloudUploadService.uploadImage2(file, roomId, 'room');
       return res.status(HttpStatus.OK).json({
         message: "Upload thành công",

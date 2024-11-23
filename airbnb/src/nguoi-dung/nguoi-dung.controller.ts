@@ -1,12 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Query, Req, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Query, Req, Put, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { NguoiDungService } from './nguoi-dung.service';
 import { CreateNguoiDungDto, FileUploadDto } from './dto/create-nguoi-dung.dto';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
-import { ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { query, Request, Response } from 'express';
 import { nguoiDungDto } from './dto/nguoi-dung.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudUploadService } from 'src/shared/cloudUpload.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Người Dùng')
 @Controller('nguoi-dung')
@@ -16,7 +17,8 @@ export class NguoiDungController {
     private readonly cloudUpLoadService: CloudUploadService
 
   ) {}
-
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post("/create-users")
   @ApiResponse({status: HttpStatus.CREATED, description: "create user successfully"})
   @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
@@ -73,7 +75,7 @@ export class NguoiDungController {
    
   }
   @ApiResponse({status: HttpStatus.BAD_REQUEST, description: "Input wrong format"})
-  @ApiResponse({status: HttpStatus.OK, description: "Get users by successfully"})
+  @ApiResponse({status: HttpStatus.OK, description: "Get users by ID successfully"})
   @ApiResponse({status: HttpStatus.NOT_FOUND, description: "User not found"})
   @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
 
@@ -103,6 +105,8 @@ export class NguoiDungController {
   @ApiResponse({status: HttpStatus.OK, description: "User updated successfully"})
   @ApiResponse({status: HttpStatus.NOT_FOUND, description: "User not found"})
   @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Put('users/:id')
   async update(
     @Param('id') id: string,
@@ -133,7 +137,8 @@ export class NguoiDungController {
   @ApiResponse({status: HttpStatus.OK, description: "User deleted successfully"})
   @ApiResponse({status: HttpStatus.NOT_FOUND, description: "User not found"})
   @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
-
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/delete-user/:id')
   async remove(
     @Param('id') id: string,
@@ -185,6 +190,8 @@ export class NguoiDungController {
 
   @ApiResponse({status: HttpStatus.OK, description: "Upload avatar successfully"})
   @ApiResponse({status: HttpStatus.INTERNAL_SERVER_ERROR, description: "Internal server"})
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post("users/upload-avatar")
     @ApiConsumes("multipart/form-data")
     @ApiBody({

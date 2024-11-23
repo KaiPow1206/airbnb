@@ -18,3 +18,7 @@ export class CreateViTriDto {
    @ApiProperty()
    hinh_anh: string;
 }
+export class FileUploadDto{
+   @ApiProperty({type: 'string',format: 'binary'})
+   hinhAnh: any;
+}
