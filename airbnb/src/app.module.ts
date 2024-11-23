@@ -8,6 +8,7 @@ import { NguoiDungModule } from './nguoi-dung/nguoi-dung.module';
 import { PhongModule } from './phong/phong.module';
 import { ViTriModule } from './vi-tri/vi-tri.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { AuthModule } from './auth/auth.module';
     PhongModule, 
     ViTriModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,JwtStrategy],
 })
 export class AppModule {}

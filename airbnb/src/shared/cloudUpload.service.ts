@@ -9,7 +9,7 @@ export class CloudUploadService{
         return new Promise((resolve,reject)=>{
             const uploadStream = this.cloudinary.uploader.upload_stream(
                 // define folder trên cloudinary để lưu hình
-                {folder},
+                {folder},   
                 // param 2: tiến hành upload hình lên cloudinary
                 (error: any, result: UploadApiResponse)=>{
                     if(error){
