@@ -4,13 +4,26 @@ import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
 import { PrismaClient } from '@prisma/client';
 import { nguoiDungDto } from './dto/nguoi-dung.dto';
 import { plainToClass } from 'class-transformer';
+import * as bcrypt from 'bcryptjs';
+
 @Injectable()
 export class NguoiDungService {
   prisma = new PrismaClient();
   async create(createNguoiDungDto: CreateNguoiDungDto): Promise<nguoiDungDto> {
     try {
+      const {name,email,pass_word,phone,birth_day,gender,role}=createNguoiDungDto;
+
+      const hashPassword = await bcrypt.hash(createNguoiDungDto.pass_word, 10);
       let newUser = await this.prisma.nguoiDung.create({
-        data: createNguoiDungDto
+        data: {
+          name: name,
+          email:email,
+          pass_word:hashPassword,
+          phone:phone,
+          birth_day:birth_day,
+          gender:gender,
+          role:role
+        },
       })
       return plainToClass(nguoiDungDto, newUser)
     } catch (error) {
