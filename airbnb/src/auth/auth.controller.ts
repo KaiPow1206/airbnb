@@ -1,10 +1,11 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { SignUpDto } from './dto/signup.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 
 
@@ -24,6 +25,8 @@ export class AuthController {
     status:HttpStatus.INTERNAL_SERVER_ERROR,
     description:"Internal Server"
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   async login(
     @Body() body: LoginDto,
     @Res() res: Response
