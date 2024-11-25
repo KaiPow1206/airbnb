@@ -25,8 +25,6 @@ export class AuthController {
     status:HttpStatus.INTERNAL_SERVER_ERROR,
     description:"Internal Server"
   })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   async login(
     @Body() body: LoginDto,
     @Res() res: Response
