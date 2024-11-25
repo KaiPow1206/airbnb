@@ -87,10 +87,20 @@ export class NguoiDungService {
       if (!user) {
         throw new Error('User not found');
       }
-  
+      const {name,email,pass_word,phone,birth_day,gender,role}=updateNguoiDungDto;
+
+      const hashPassword = await bcrypt.hash(updateNguoiDungDto.pass_word, 10);
       const updatedUser = await this.prisma.nguoiDung.update({
         where: { id_nguoi_dung: id },
-        data: updateNguoiDungDto,
+        data:{
+          name: name,
+          email:email,
+          pass_word:hashPassword,
+          phone:phone,
+          birth_day:birth_day,
+          gender:gender,
+          role:role
+        }
       });
   
       return {

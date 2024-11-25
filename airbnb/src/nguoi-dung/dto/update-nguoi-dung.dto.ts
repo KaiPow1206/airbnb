@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateNguoiDungDto } from './create-nguoi-dung.dto';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateNguoiDungDto extends PartialType(CreateNguoiDungDto) {
@@ -11,8 +11,13 @@ export class UpdateNguoiDungDto extends PartialType(CreateNguoiDungDto) {
 
     @ApiProperty()
     @IsOptional()
-    @IsString()
+    @IsEmail()
     email: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    pass_word: string;
 
     @ApiProperty()
     @IsOptional()

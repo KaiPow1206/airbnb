@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum,IsNotEmpty } from "class-validator";
+import { IsEmail, IsEnum,IsNotEmpty } from "class-validator";
 export class CreateNguoiDungDto {
     
     @IsNotEmpty({message: "Tên người dùng không được để trống"})
     @ApiProperty()
     name: string;
 
-    @IsNotEmpty({message: "Email người dùng không được để trống"})
+    @IsEmail({},{message:"Email không đúng định dạng"})
     @ApiProperty()
     email: string;
 
